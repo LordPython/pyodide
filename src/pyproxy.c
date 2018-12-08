@@ -169,6 +169,25 @@ EM_JS(int, pyproxy_init, (), {
       } else if (jskey === 'destroy') {
         __pyproxy_destroy(this.getPtr(jsobj));
         jsobj['$$']['ptr'] = null;
+      } else if (jskey === Symbol.iterator) {
+        var _pyiter = this.get(jsobj, "__iter__")();
+        return function() {
+          return {
+            _pyiter: _pyiter,
+            next: function() {
+              try {
+                return { value: this._pyiter.__next__(), done: false };
+              } catch(e) {
+                if (e.message = "StopIteration\n") {
+                  return { done: true };
+                } else {
+                  throw e;
+                }
+              }
+            }
+            //[Symbol.iterator]: function() { return this; }
+          };
+        };
       }
       ptrobj = this.getPtr(jsobj);
       var idkey = Module.hiwire_new_value(jskey);

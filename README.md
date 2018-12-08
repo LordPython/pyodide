@@ -1,5 +1,7 @@
 # Pyodide
 
+This fork of pyodide is for experimenting with getting eos from Pyfa running in the browser.
+
 
 [![Build Status](https://circleci.com/gh/iodide-project/pyodide.png)](https://circleci.com/gh/iodide-project/pyodide)
 

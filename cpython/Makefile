@@ -20,6 +20,10 @@ ZLIBTARBALL=$(ROOT)/downloads/zlib-$(ZLIBVERSION).tar.gz
 ZLIBBUILD=$(ROOT)/build/zlib-$(ZLIBVERSION)
 ZLIBURL=https://zlib.net/zlib-1.2.11.tar.gz
 
+SQLITETARBALL=$(ROOT)/downloads/sqlite-autoconf-3260000.tar.gz
+SQLITEBUILD=$(ROOT)/build/sqlite-autoconf-3260000
+SQLITEURL=https://www.sqlite.org/2018/sqlite-autoconf-3260000.tar.gz
+
 
 all: $(INSTALL)/lib/$(LIB)
 
@@ -52,6 +56,10 @@ $(ZLIBTARBALL):
 	[ -d $(ROOT)/downloads ] || mkdir $(ROOT)/downloads
 	wget -q -O $@ $(ZLIBURL)
 
+$(SQLITETARBALL):
+	[ -d $(ROOT)/downloads ] || mkdir $(ROOT)/downloads
+	wget -q -O $@ $(SQLITEURL)
+
 
 $(HOSTPYTHON) $(HOSTPGEN): $(TARBALL)
 	mkdir -p $(HOSTINSTALL)
@@ -78,8 +86,17 @@ $(ZLIBBUILD)/.patched: $(ZLIBTARBALL)
 	cat patches/zlib/*.patch | (cd $(ZLIBBUILD) ; patch -p1)
 	touch $@
 
+$(SQLITEBUILD)/install/lib/libsqlite3.a: $(SQLITETARBALL)
+	[ -d $(ROOT)/build ] || (mkdir $(ROOT)/build)
+	tar -C $(ROOT)/build/ -xf $(SQLITETARBALL)
+	( \
+		cd $(SQLITEBUILD); \
+		emconfigure ./configure --disable-shared --prefix=$(SQLITEBUILD)/install ;\
+		emmake make install ;\
+	)
 
-$(BUILD)/Makefile: $(BUILD)/.patched $(ZLIBBUILD)/.patched
+
+$(BUILD)/Makefile: $(BUILD)/.patched $(ZLIBBUILD)/.patched $(SQLITEBUILD)/install/lib/libsqlite3.a
 	cp config.site $(BUILD)/
 	( \
 		cd $(BUILD); \

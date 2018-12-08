@@ -1,0 +1,14 @@
+diff --git a/eos/db/migration.py b/eos/db/migration.py
+index 4832daa..4b5b67c 100644
+--- a/eos/db/migration.py
++++ b/eos/db/migration.py
+@@ -2,7 +2,7 @@ from logbook import Logger
+ import shutil
+ import time
+ 
+-import config
++from eos import config
+ from . import migrations
+ 
+ pyfalog = Logger(__name__)
+

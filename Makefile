@@ -15,6 +15,7 @@ OPTFLAGS=-O3
 CFLAGS=$(OPTFLAGS) -g -I$(PYTHONINCLUDE) -Wno-warn-absolute-paths
 CXXFLAGS=$(CFLAGS) -std=c++14
 
+
 # __ZNKSt3__220__vector_base_commonILb1EE20__throw_length_errorEv is in
 # EXPORTED_FUNCTIONS to keep the C++ standard library in the core, even though
 # there isn't any C++ there, for the sake of loading dynamic modules written in
@@ -24,8 +25,9 @@ LDFLAGS=\
 	-s MODULARIZE=1 \
 	$(CPYTHONROOT)/installs/python-$(PYVERSION)/lib/libpython$(PYMINOR).a \
   lz4/lz4-1.8.3/lib/liblz4.a \
+	$(CPYTHONROOT)/build/sqlite-autoconf-3260000/install/lib/libsqlite3.a \
   -s "BINARYEN_METHOD='native-wasm'" \
-  -s TOTAL_MEMORY=1073741824 \
+  -s TOTAL_MEMORY=26214400 \
   -s ALLOW_MEMORY_GROWTH=1 \
 	-s MAIN_MODULE=1 \
 	-s EMULATED_FUNCTION_POINTERS=1 \
@@ -215,7 +217,6 @@ $(CLAPACK): $(CPYTHONLIB)
 
 build/packages.json: $(CPYTHONLIB) $(CLAPACK)
 	make -C packages
-
 
 emsdk/emsdk/.complete:
 	make -C emsdk

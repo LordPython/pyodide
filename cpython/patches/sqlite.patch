@@ -1,0 +1,185 @@
+diff --git a/Modules/_sqlite/cache.c b/Modules/_sqlite/cache.c
+index 72b1f2c..e69859b 100644
+--- a/Modules/_sqlite/cache.c
++++ b/Modules/_sqlite/cache.c
+@@ -257,7 +257,7 @@ static PyMethodDef cache_methods[] = {
+ 
+ PyTypeObject pysqlite_NodeType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME "Node",                             /* tp_name */
++        "sqlite3" "Node",                             /* tp_name */
+         sizeof(pysqlite_Node),                          /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_node_dealloc,              /* tp_dealloc */
+@@ -299,7 +299,7 @@ PyTypeObject pysqlite_NodeType = {
+ 
+ PyTypeObject pysqlite_CacheType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".Cache",                           /* tp_name */
++        "sqlite3" ".Cache",                           /* tp_name */
+         sizeof(pysqlite_Cache),                         /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_cache_dealloc,             /* tp_dealloc */
+diff --git a/Modules/_sqlite/module.c b/Modules/_sqlite/module.c
+index 6befa07..2e6409a 100644
+--- a/Modules/_sqlite/module.c
++++ b/Modules/_sqlite/module.c
+@@ -381,56 +381,56 @@ PyMODINIT_FUNC PyInit__sqlite3(void)
+ 
+     /*** Create DB-API Exception hierarchy */
+ 
+-    if (!(pysqlite_Error = PyErr_NewException(MODULE_NAME ".Error", PyExc_Exception, NULL))) {
++    if (!(pysqlite_Error = PyErr_NewException("sqlite3" ".Error", PyExc_Exception, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "Error", pysqlite_Error);
+ 
+-    if (!(pysqlite_Warning = PyErr_NewException(MODULE_NAME ".Warning", PyExc_Exception, NULL))) {
++    if (!(pysqlite_Warning = PyErr_NewException("sqlite3" ".Warning", PyExc_Exception, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "Warning", pysqlite_Warning);
+ 
+     /* Error subclasses */
+ 
+-    if (!(pysqlite_InterfaceError = PyErr_NewException(MODULE_NAME ".InterfaceError", pysqlite_Error, NULL))) {
++    if (!(pysqlite_InterfaceError = PyErr_NewException("sqlite3" ".InterfaceError", pysqlite_Error, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "InterfaceError", pysqlite_InterfaceError);
+ 
+-    if (!(pysqlite_DatabaseError = PyErr_NewException(MODULE_NAME ".DatabaseError", pysqlite_Error, NULL))) {
++    if (!(pysqlite_DatabaseError = PyErr_NewException("sqlite3" ".DatabaseError", pysqlite_Error, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "DatabaseError", pysqlite_DatabaseError);
+ 
+     /* pysqlite_DatabaseError subclasses */
+ 
+-    if (!(pysqlite_InternalError = PyErr_NewException(MODULE_NAME ".InternalError", pysqlite_DatabaseError, NULL))) {
++    if (!(pysqlite_InternalError = PyErr_NewException("sqlite3" ".InternalError", pysqlite_DatabaseError, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "InternalError", pysqlite_InternalError);
+ 
+-    if (!(pysqlite_OperationalError = PyErr_NewException(MODULE_NAME ".OperationalError", pysqlite_DatabaseError, NULL))) {
++    if (!(pysqlite_OperationalError = PyErr_NewException("sqlite3" ".OperationalError", pysqlite_DatabaseError, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "OperationalError", pysqlite_OperationalError);
+ 
+-    if (!(pysqlite_ProgrammingError = PyErr_NewException(MODULE_NAME ".ProgrammingError", pysqlite_DatabaseError, NULL))) {
++    if (!(pysqlite_ProgrammingError = PyErr_NewException("sqlite3" ".ProgrammingError", pysqlite_DatabaseError, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "ProgrammingError", pysqlite_ProgrammingError);
+ 
+-    if (!(pysqlite_IntegrityError = PyErr_NewException(MODULE_NAME ".IntegrityError", pysqlite_DatabaseError,NULL))) {
++    if (!(pysqlite_IntegrityError = PyErr_NewException("sqlite3" ".IntegrityError", pysqlite_DatabaseError,NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "IntegrityError", pysqlite_IntegrityError);
+ 
+-    if (!(pysqlite_DataError = PyErr_NewException(MODULE_NAME ".DataError", pysqlite_DatabaseError, NULL))) {
++    if (!(pysqlite_DataError = PyErr_NewException("sqlite3" ".DataError", pysqlite_DatabaseError, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "DataError", pysqlite_DataError);
+ 
+-    if (!(pysqlite_NotSupportedError = PyErr_NewException(MODULE_NAME ".NotSupportedError", pysqlite_DatabaseError, NULL))) {
++    if (!(pysqlite_NotSupportedError = PyErr_NewException("sqlite3" ".NotSupportedError", pysqlite_DatabaseError, NULL))) {
+         goto error;
+     }
+     PyDict_SetItemString(dict, "NotSupportedError", pysqlite_NotSupportedError);
+@@ -474,7 +474,7 @@ PyMODINIT_FUNC PyInit__sqlite3(void)
+ error:
+     if (PyErr_Occurred())
+     {
+-        PyErr_SetString(PyExc_ImportError, MODULE_NAME ": init failed");
++        PyErr_SetString(PyExc_ImportError, "sqlite3" ": init failed");
+         Py_DECREF(module);
+         module = NULL;
+     }
+diff --git a/Modules/_sqlite/connection.c b/Modules/_sqlite/connection.c
+index 6e05761..77be9c6 100644
+--- a/Modules/_sqlite/connection.c
++++ b/Modules/_sqlite/connection.c
+@@ -1196,7 +1196,7 @@ PyObject* pysqlite_connection_call(pysqlite_Connection* self, PyObject* args, Py
+         return NULL;
+     }
+ 
+-    if (!_PyArg_NoKeywords(MODULE_NAME ".Connection", kwargs))
++    if (!_PyArg_NoKeywords("sqlite3" ".Connection", kwargs))
+         return NULL;
+ 
+     if (!PyArg_ParseTuple(args, "O", &sql))
+@@ -1421,7 +1421,7 @@ pysqlite_connection_iterdump(pysqlite_Connection* self, PyObject* args)
+         goto finally;
+     }
+ 
+-    module = PyImport_ImportModule(MODULE_NAME ".dump");
++    module = PyImport_ImportModule("sqlite3" ".dump");
+     if (!module) {
+         goto finally;
+     }
+@@ -1784,7 +1784,7 @@ static struct PyMemberDef connection_members[] =
+ 
+ PyTypeObject pysqlite_ConnectionType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".Connection",                      /* tp_name */
++        "sqlite3" ".Connection",                      /* tp_name */
+         sizeof(pysqlite_Connection),                    /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_connection_dealloc,        /* tp_dealloc */
+diff --git a/Modules/_sqlite/cursor.c b/Modules/_sqlite/cursor.c
+index 4ecb5b4..c464bba 100644
+--- a/Modules/_sqlite/cursor.c
++++ b/Modules/_sqlite/cursor.c
+@@ -946,7 +946,7 @@ PyDoc_STR("SQLite database cursor class.");
+ 
+ PyTypeObject pysqlite_CursorType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".Cursor",                          /* tp_name */
++        "sqlite3" ".Cursor",                          /* tp_name */
+         sizeof(pysqlite_Cursor),                        /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_cursor_dealloc,            /* tp_dealloc */
+diff --git a/Modules/_sqlite/statement.c b/Modules/_sqlite/statement.c
+index 3869088..466f34d 100644
+--- a/Modules/_sqlite/statement.c
++++ b/Modules/_sqlite/statement.c
+@@ -451,7 +451,7 @@ static int pysqlite_check_remaining_sql(const char* tail)
+ 
+ PyTypeObject pysqlite_StatementType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".Statement",                       /* tp_name */
++        "sqlite3" ".Statement",                       /* tp_name */
+         sizeof(pysqlite_Statement),                     /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_statement_dealloc,         /* tp_dealloc */
+diff --git a/Modules/_sqlite/prepare_protocol.c b/Modules/_sqlite/prepare_protocol.c
+index f2c85f9..c14ef59 100644
+--- a/Modules/_sqlite/prepare_protocol.c
++++ b/Modules/_sqlite/prepare_protocol.c
+@@ -35,7 +35,7 @@ void pysqlite_prepare_protocol_dealloc(pysqlite_PrepareProtocol* self)
+ 
+ PyTypeObject pysqlite_PrepareProtocolType= {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".PrepareProtocol",                 /* tp_name */
++        "sqlite3" ".PrepareProtocol",                 /* tp_name */
+         sizeof(pysqlite_PrepareProtocol),               /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_prepare_protocol_dealloc,  /* tp_dealloc */
+diff --git a/Modules/_sqlite/row.c b/Modules/_sqlite/row.c
+index ec2c788..484eb79 100644
+--- a/Modules/_sqlite/row.c
++++ b/Modules/_sqlite/row.c
+@@ -231,7 +231,7 @@ static PyMethodDef pysqlite_row_methods[] = {
+ 
+ PyTypeObject pysqlite_RowType = {
+         PyVarObject_HEAD_INIT(NULL, 0)
+-        MODULE_NAME ".Row",                             /* tp_name */
++        "sqlite3" ".Row",                             /* tp_name */
+         sizeof(pysqlite_Row),                           /* tp_basicsize */
+         0,                                              /* tp_itemsize */
+         (destructor)pysqlite_row_dealloc,               /* tp_dealloc */

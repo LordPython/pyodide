@@ -269,7 +269,7 @@ _python2js(PyObject* x, PyObject* map)
     return _python2js_bytes(x);
   } else if (JsProxy_Check(x)) {
     return JsProxy_AsJs(x);
-  } else if (PyList_Check(x) || PyTuple_Check(x) ||
+  } else if (PyList_CheckExact(x) || PyTuple_Check(x) ||
              is_type_name(x, "<class 'numpy.ndarray'>")) {
     return _python2js_sequence(x, map);
   } else if (PyDict_Check(x)) {

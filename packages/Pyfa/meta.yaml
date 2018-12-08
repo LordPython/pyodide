@@ -1,0 +1,21 @@
+package:
+  name: Pyfa
+  version: 2.6.1
+
+source:
+  #url: file:///home/josephm/eos-2.6.1.tar.gz
+  #sha256: f1d5249b02f1ec74003fa84e87fc107c690e19a262a3d9438d81e5ac2b719d51
+  url: https://github.com/pyfa-org/Pyfa/archive/v2.6.1.tar.gz
+  sha256: 7fb8e9863a81e6dc2f1e8f5df9bb70cdd4b0823e27a82b24158ea3a1c2dbfab9
+
+  patches:
+    - patches/migration_config_import.patch
+
+  extras:
+    - - setup.py
+      - setup.py
+
+requirements:
+  run:
+    - Logbook
+    - SQLAlchemy
